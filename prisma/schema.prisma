@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model anounce {
+  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title       String     @unique @db.VarChar
+  description String?    @db.VarChar
+  unit        String?    @db.VarChar
+  quantity    Decimal?   @db.Decimal(15, 2)
+  total       Decimal?   @db.Decimal(15, 2)
+  anouncer_fk String     @db.Uuid
+  residue_fk  String     @db.Uuid
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  profile     profile    @relation(fields: [anouncer_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  residue     residue    @relation(fields: [residue_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  proposal    proposal[]
+}
+
+model profile {
+  id           String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email        String     @unique @db.VarChar
+  username     String     @unique @db.VarChar
+  password     String     @db.VarChar
+  cnpj         String     @db.VarChar
+  name         String     @db.VarChar
+  trading_name String     @db.VarChar
+  type         String     @db.VarChar
+  uf           String     @db.VarChar
+  city         String     @db.VarChar
+  phone        String?    @db.VarChar
+  image_url    String?    @db.VarChar
+  created_at   DateTime?  @default(now()) @db.Timestamptz(6)
+  anounce      anounce[]
+  proposal     proposal[]
+}
+
+model proposal {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  description String?   @db.VarChar
+  price       Decimal?  @db.Decimal(10, 2)
+  acepted     Boolean?
+  status      Boolean?
+  proposer_fk String    @db.Uuid
+  anounce_fk  String    @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  anounce     anounce   @relation(fields: [anounce_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  profile     profile   @relation(fields: [proposer_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model residue {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String    @unique @db.VarChar
+  description String?   @db.VarChar
+  nature      String    @db.VarChar
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  anounce     anounce[]
+}
