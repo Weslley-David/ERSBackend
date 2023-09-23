@@ -8,7 +8,7 @@ WORKDIR /usr/app
 COPY package*.json ./
 
 # Instale as dependências
-RUN npm install && npm install typescript
+RUN npm install && npm install typescript && npx prisma generate
 
 # Copie todo o código-fonte do aplicativo para o contêiner
 COPY . .
