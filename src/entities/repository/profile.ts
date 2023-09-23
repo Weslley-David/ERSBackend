@@ -34,6 +34,21 @@ export class ProfileRepository {
         return profile
     }
 
+    updatePhone = async (id: string, phone: string): Promise<profile> => {
+
+        const updatedProfile = await prisma.profile.update({
+            where: {
+                id:id,
+            },
+            data: {
+                phone: phone,
+            },
+        })
+
+        return updatedProfile
+
+    }
+
     createProfile = async (email: string,
         username: string,
         password: string,
@@ -64,28 +79,28 @@ export class ProfileRepository {
         return profile
     }
 
-    updateProfile = async (profile_info: profile): Promise<profile> => {
-        const updateprofile = await prisma.profile.update({
-            where: {
-                email: profile_info.email,
-            },
-            data: {
-                email: profile_info.email,
-                username: profile_info.username,
-                password: profile_info.password,
-                cnpj: profile_info.cnpj,
-                name: profile_info.name,
-                trading_name: profile_info.trading_name,
-                type: profile_info.type,
-                image_url: profile_info.image_url,
-                uf: profile_info.uf,
-                city: profile_info.city,
-                phone: profile_info.phone
-            }
-        })
+    // updateProfile = async (profile_info: profile): Promise<profile> => {
+    //     const updateprofile = await prisma.profile.update({
+    //         where: {
+    //             email: profile_info.email,
+    //         },
+    //         data: {
+    //             email: profile_info.email,
+    //             username: profile_info.username,
+    //             password: profile_info.password,
+    //             cnpj: profile_info.cnpj,
+    //             name: profile_info.name,
+    //             trading_name: profile_info.trading_name,
+    //             type: profile_info.type,
+    //             image_url: profile_info.image_url,
+    //             uf: profile_info.uf,
+    //             city: profile_info.city,
+    //             phone: profile_info.phone
+    //         }
+    //     })
 
-        return updateprofile
-    }
+    //     return updateprofile
+    // }
 
     deleteProfile = async (id: string) => {
         const deletedProfile = await prisma.profile.deleteMany({

@@ -9,4 +9,14 @@ export class ProfileService {
         const profile: profile[] = await this.profileRepository.listProfile(skip, take)
         return (profile)
     }
+
+    getByUsername = async (username: string) => {
+        const profile: profile = await this.profileRepository.getProfileByUsername(username)
+        return (profile)
+    }
+
+    updatePhone = async (id: string, phone: string) => {
+        const profile: profile = await this.profileRepository.updatePhone(id, phone)
+        return (profile)
+    }
 }

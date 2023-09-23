@@ -17,4 +17,8 @@ export class ProfileController {
         const result = await this.profileService.list(skip, take)
         return res.json(result).status(200)
     }
+
+    getByUsername =async (req: Request, res: Response) => {
+        const username: string = String(req.params.page)
+    }
 }

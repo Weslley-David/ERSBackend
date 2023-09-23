@@ -4,6 +4,7 @@ import { prisma } from "../database/index"
 import { DatabaseError } from "../../errors";
 
 export class AnounceRepository {
+    
     listAnounce = async (skip: number, take: number): Promise<anounce[]> => {
         const anounce = await prisma.anounce.findMany({
             skip: skip,
@@ -17,6 +18,16 @@ export class AnounceRepository {
         return anounce
     }
 
+    listAnounceByAnouncerId = async (id: string) => {
+        const anounces = await prisma.anounce.findMany({
+            where: {
+                anouncer_fk: id,
+            },
+        });
+
+        return anounces;
+    }
+
     getAnounceById = async (id: string): Promise<anounce> => {
         const anounce = await prisma.anounce.findUnique({ where: { id: id } })
         if (!anounce) {
@@ -25,24 +36,32 @@ export class AnounceRepository {
         return anounce
     }
 
-    createAnounce = async (anounce_info: anounce): Promise<anounce> => {
+    createAnounce = async (
+        title: string,
+        description: string,
+        unit: string,
+        quantity: number,
+        total: number,
+        anouncer_fk: string,
+        residue_fk: string
+    ): Promise<anounce> => {
         const anounce = await prisma.anounce.create({
             data: {
-                title: anounce_info.title,
-                description: anounce_info.description,
-                quantity: anounce_info.quantity,
-                unit: anounce_info.unit,
-                total: anounce_info.total,
-                anouncer_fk: anounce_info.anouncer_fk,
-                residue_fk: anounce_info.residue_fk
+                title: title,
+                description: description,
+                quantity: quantity,
+                unit: unit,
+                total: total,
+                anouncer_fk: anouncer_fk,
+                residue_fk: residue_fk
             }
         })
 
         return anounce
     }
 
-    updateProfile = async (anounce_info: anounce): Promise<anounce> => {
-        const updateprofile = await prisma.anounce.update({
+    updateAnounce = async (anounce_info: anounce): Promise<anounce> => {
+        const updateanounce = await prisma.anounce.update({
             where: {
                 id: anounce_info.id,
             },
@@ -57,7 +76,23 @@ export class AnounceRepository {
             }
         })
 
-        return updateprofile
+        return updateanounce
+    }
+    updateAnounceQuantity =async (id: string, quantity: number) => {
+        const updatedProposal = await prisma.anounce.update({
+            where: {
+                id: id,
+            },
+            data: {
+                quantity: quantity,
+            },
+        })
+
+        if (!updatedProposal) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+        return updatedProposal
+        
     }
     deleteAnounce = async (id: string) => {
         const deletedAnounce = await prisma.anounce.deleteMany({

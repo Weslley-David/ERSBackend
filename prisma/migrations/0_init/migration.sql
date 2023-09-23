@@ -3,9 +3,9 @@ CREATE TABLE "anounce" (
     "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "title" VARCHAR NOT NULL,
     "description" VARCHAR,
-    "unit" VARCHAR,
-    "quantity" DECIMAL(15,2),
-    "total" DECIMAL(15,2),
+    "unit" VARCHAR NOT NULL,
+    "quantity" DECIMAL(15,2) NOT NULL,
+    "total" DECIMAL(15,2) NOT NULL,
     "anouncer_fk" UUID NOT NULL,
     "residue_fk" UUID NOT NULL,
     "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
@@ -42,6 +42,7 @@ CREATE TABLE "proposal" (
     "proposer_fk" UUID NOT NULL,
     "anounce_fk" UUID NOT NULL,
     "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "quantity" DECIMAL(15,2) NOT NULL,
 
     CONSTRAINT "proposal_pkey" PRIMARY KEY ("id")
 );

@@ -17,7 +17,36 @@ export class ProposalRepository {
         return proposal
     }
 
-    getProfileByEmail = async (id: string): Promise<proposal> => {
+    listProposalsByAnounceId = async (id: string): Promise<proposal[]> => {
+        const proposal = await prisma.proposal.findMany({
+            where: {
+                anounce_fk: id,
+            },
+        });
+
+        if (!proposal) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+
+        return proposal;
+    }
+
+
+    listProposalsByProposerId = async (id: string): Promise<proposal[]> => {
+        const proposal = await prisma.proposal.findMany({
+            where: {
+                proposer_fk: id
+            },
+        });
+
+        if (!proposal) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+
+        return proposal;
+    }
+
+    getProposalById = async (id: string): Promise<proposal> => {
         const proposal = await prisma.proposal.findUnique({ where: { id: id } })
         if (!proposal) {
             throw new DatabaseError("Coud'not recover data of email");
@@ -25,15 +54,53 @@ export class ProposalRepository {
         return proposal
     }
 
-    createProposal = async (proposal_info: proposal): Promise<proposal> => {
+
+    updateProposalAcepted = async (id: string, acepted: boolean): Promise<proposal> => {
+        const updatedProposal = await prisma.proposal.update({
+            where: {
+                id: id,
+            },
+            data: {
+                acepted: acepted,
+            },
+        })
+
+        if (!updatedProposal) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+        return updatedProposal
+    }
+
+    updateProposalStatus = async (id: string, status: boolean): Promise<proposal> => {
+        const updatedProposal = await prisma.proposal.update({
+            where: {
+                id: id,
+            },
+            data: {
+                status: status,
+            },
+        })
+
+        if (!updatedProposal) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+        return updatedProposal
+    }
+
+    createProposal = async (
+        description: string,
+        price: number,
+        quantity: number,
+        proposer_fk: string,
+        anounce_fk: string
+    ): Promise<proposal> => {
         const proposal = await prisma.proposal.create({
             data: {
-                proposer_fk: proposal_info.proposer_fk,
-                anounce_fk: proposal_info.proposer_fk,
-                price: proposal_info.price,
-                acepted: proposal_info.acepted,
-                status: proposal_info.status,
-                description: proposal_info.description
+                proposer_fk: proposer_fk,
+                anounce_fk: anounce_fk,
+                price: price,
+                quantity: quantity,
+                description: description
 
             }
         })

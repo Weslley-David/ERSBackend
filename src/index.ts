@@ -2,7 +2,7 @@ import express from 'express'
 import { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import routes from './routes'
-import { AcessDeniedError, DatabaseError, InteralServerError, RequestError } from './errors'
+import { AcessDeniedError, DatabaseError, DomainLogicError, InteralServerError, RequestError } from './errors'
 import { Prisma } from '@prisma/client'
 
 const app = express()
@@ -46,7 +46,14 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {//,
                 "msg": error.message,
                 "errors": error.errors.array()
             })
-        } else if (error instanceof DatabaseError) {
+        } else if (error instanceof DomainLogicError) {
+            res.status(error.statusCode).json({
+                "msg": error.message
+            })
+
+
+        }
+        else if (error instanceof DatabaseError) {
             res.status(error.statusCode).json({
                 "msg": error.message
             })
