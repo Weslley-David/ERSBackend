@@ -15,10 +15,12 @@ COPY . .
 
 # Compile o código TypeScript (substitua pelo seu comando de compilação específico)
 RUN ls
+RUN npx prisma generate
 RUN npm run dev
 
 # Expõe a porta em que o aplicativo está sendo executado (substitua pela porta do seu aplicativo)
 EXPOSE 3000
 
 # Comando para iniciar o aplicativo (substitua pelo seu comando de start específico)
-CMD [ "npm", "start" ]
+RUN ls
+CMD [ "npm", "dev" ]
