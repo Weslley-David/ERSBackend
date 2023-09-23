@@ -2,19 +2,20 @@
 FROM node:20
 
 # Crie e defina o diretório de trabalho dentro do contêiner
-WORKDIR /app
+WORKDIR /usr/app
 
 # Copie os arquivos de configuração e as dependências do aplicativo para o contêiner
 COPY package*.json ./
 
 # Instale as dependências
-RUN npm install
+RUN npm install && npm install typescript
 
 # Copie todo o código-fonte do aplicativo para o contêiner
 COPY . .
 
 # Compile o código TypeScript (substitua pelo seu comando de compilação específico)
-RUN npm run build
+RUN ls
+RUN npm run dev
 
 # Expõe a porta em que o aplicativo está sendo executado (substitua pela porta do seu aplicativo)
 EXPOSE 3000
