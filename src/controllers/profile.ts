@@ -27,17 +27,18 @@ export class ProfileController {
         const { id } = req.body
         
         const result = await this.profileService.generateDashboad(id)
-        const browser = await puppeteer.launch({ headless: "new" });
-        const page = await browser.newPage();
-        await page.setContent(result);
+        // const browser = await puppeteer.launch({ headless: "new" });
+        // const page = await browser.newPage();
+        // await page.setContent(result);
 
-        const pdfBuffer = await page.pdf({ format: 'A4', landscape: false });
+        // const pdfBuffer = await page.pdf({ format: 'A4', landscape: false });
 
-        await browser.close();
+        // await browser.close();
 
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=certificate.pdf');
-        res.send(pdfBuffer);
+        // res.setHeader('Content-Type', 'application/pdf');
+        // res.setHeader('Content-Disposition', 'attachment; filename=certificate.pdf');
+        // res.send(pdfBuffer);
+        return res.json(result).status(200)
     }
     getByUsername = async (req: Request, res: Response) => {
         const username: string = String(req.params.name)
