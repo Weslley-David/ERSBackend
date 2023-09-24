@@ -23,16 +23,16 @@ export class ProfileService {
     generateDashboad =async (id: string) => {
         const profile: profile = await this.profileRepository.getProfileById(id)
         const dash_inputs: DashboardData[] = await this.profileRepository.generateDashboard(profile.email)
-        let insights = `
-            <h3>${profile.trading_name}<h3>
-                <br>
-            <h5>${profile.city} - ${profile.uf}<h5>`
-        dash_inputs.forEach((data) => {
-            insights = insights + `
-            ${data.ResidueName} - Total: ${data.TotalSum} ${data.AnounceUnit} - Destinated: ${data.QuantitySum} - Remanecent: ${data.TotalSum - data.QuantitySum} <br>
-            `
-          });
+        // let insights = `
+        //     <h3>${profile.trading_name}<h3>
+        //         <br>
+        //     <h5>${profile.city} - ${profile.uf}<h5>`
+        // dash_inputs.forEach((data) => {
+        //     insights = insights + `
+        //     ${data.ResidueName} - Total: ${data.TotalSum} ${data.AnounceUnit} - Destinated: ${data.QuantitySum} - Remanecent: ${data.TotalSum - data.QuantitySum} <br>
+        //     `
+        //   });
         
-        return insights
+        return dash_inputs
     }
 }
