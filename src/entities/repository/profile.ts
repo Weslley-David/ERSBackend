@@ -1,8 +1,17 @@
 
-import { profile } from "@prisma/client"
+import { Prisma, profile } from "@prisma/client"
 import { Profile } from "../models/profile";
 import { prisma } from "../database/index"
 import { DatabaseError } from "../../errors";
+import { query } from "express";
+
+export interface DashboardData {
+    ResidueName: string;
+    ResidueDescription: string;
+    AnounceUnit: string;
+    TotalSum: number;
+    QuantitySum: number;
+}
 
 export class ProfileRepository {
     listProfile = async (skip: number, take: number): Promise<profile[]> => {
@@ -18,8 +27,42 @@ export class ProfileRepository {
         return profile
     }
 
+    generateDashboard = async (email: string): Promise<DashboardData[]> => {
+        //const result = await prisma.$queryRaw`SELECT * FROM profile where email = ${email}`
+        const result: DashboardData[] = await prisma.$queryRaw`SELECT
+        r.name AS "ResidueName",
+        r.description AS "ResidueDescription",
+        a.unit AS "AnounceUnit",
+        SUM(a.total) AS "TotalSum",
+        SUM(a.quantity) AS "QuantitySum"
+    FROM
+        anounce a
+    INNER JOIN
+        residue r ON a.residue_fk = r.id
+    INNER JOIN
+        profile p ON a.anouncer_fk = p.id
+    WHERE
+        p.email = ${email}
+    GROUP BY
+        r.name, r.description, a.unit
+    ORDER BY
+        r.name;
+    `
+    if (!result) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+        return result;
+    }
     getProfileByEmail = async (email: string): Promise<profile> => {
         const profile = await prisma.profile.findUnique({ where: { email: email } })
+        if (!profile) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+        return profile
+    }
+
+    getProfileById = async (id: string): Promise<profile> => {
+        const profile = await prisma.profile.findUnique({ where: { id: id } })
         if (!profile) {
             throw new DatabaseError("Coud'not recover data of email");
         }
@@ -38,7 +81,7 @@ export class ProfileRepository {
 
         const updatedProfile = await prisma.profile.update({
             where: {
-                id:id,
+                id: id,
             },
             data: {
                 phone: phone,
@@ -79,29 +122,6 @@ export class ProfileRepository {
         return profile
     }
 
-    // updateProfile = async (profile_info: profile): Promise<profile> => {
-    //     const updateprofile = await prisma.profile.update({
-    //         where: {
-    //             email: profile_info.email,
-    //         },
-    //         data: {
-    //             email: profile_info.email,
-    //             username: profile_info.username,
-    //             password: profile_info.password,
-    //             cnpj: profile_info.cnpj,
-    //             name: profile_info.name,
-    //             trading_name: profile_info.trading_name,
-    //             type: profile_info.type,
-    //             image_url: profile_info.image_url,
-    //             uf: profile_info.uf,
-    //             city: profile_info.city,
-    //             phone: profile_info.phone
-    //         }
-    //     })
-
-    //     return updateprofile
-    // }
-
     deleteProfile = async (id: string) => {
         const deletedProfile = await prisma.profile.deleteMany({
             where: {
@@ -114,7 +134,7 @@ export class ProfileRepository {
 
 // async function ftest() {
 //     const test: ProfileRepository = new ProfileRepository
-//     const result = await test.listProfile(0, 2)
+//     const result = await test.generateDashboard('empresaverde@vermelha.com')
 //     console.log(result)
 // }
 

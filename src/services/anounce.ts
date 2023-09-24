@@ -1,5 +1,6 @@
 import { anounce } from "@prisma/client"
 import { AnounceRepository } from "../entities/repository/anounce"
+import { DomainLogicError } from "../errors"
 
 export class AnounceService {
     constructor(
@@ -8,6 +9,24 @@ export class AnounceService {
     list = async (skip: number, take: number) => {
         const anounce: anounce[] = await this.anounceRepository.listAnounce(skip, take)
         return (anounce)
+    }
+
+    listByResidueName = async (skip: number, take: number, name: string) => {
+        const anounce: anounce[] = await this.anounceRepository.listAnounceByResidue(skip, take, name)
+        return (anounce)
+    }
+
+    updateAnounceQuantity =async (id: string, quantity: number) => {
+
+
+        if(quantity < 0){
+            throw new DomainLogicError("quantity doesnt matches");
+        }
+
+
+        const anounce: anounce = await this.anounceRepository.getAnounceById(id)
+        const updatedAnounce = await this.anounceRepository.updateAnounceQuantityAndTotal(id, parseFloat(anounce.quantity+"") - parseFloat(quantity+""), parseFloat(anounce.total+"") - parseFloat(quantity+""))
+        return (updatedAnounce)
     }
 
     createAnounce = async (

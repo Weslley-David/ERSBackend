@@ -22,6 +22,7 @@ export class ProposalService {
         return (proposal)
     }
 
+
     updateAcepted =async (id: string, acepted: boolean) => {
 
         if(acepted == false){
@@ -48,6 +49,18 @@ export class ProposalService {
     }
 
     updateStatus =async (id: string, status: boolean) => {
+        if(status == true){
+            
+            const proposal: proposal = await this.proposalRepository.getProposalById(id)
+            if (proposal.status != false && proposal.acepted == true){
+                const anounce: anounce = await this.anounceRepository.getAnounceById(proposal.anounce_fk)
+
+                const updatedProposal = await this.anounceRepository.updateAnounceQuantity(anounce.id, parseFloat(anounce.quantity+"") + parseFloat(proposal.quantity+""))
+                
+                return updatedProposal
+            }
+           
+        }
         const updatedProposal = await this.proposalRepository.updateProposalStatus(id, status)
         return updatedProposal
     }

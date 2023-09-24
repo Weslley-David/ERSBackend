@@ -11,13 +11,24 @@ anounceRoutes.get('/list',
     body('take').isInt().toInt(),
     resolver(residueController.list))
 
+anounceRoutes.get('/listbyresiduename',
+    body('skip').isInt().toInt(),
+    body('take').isInt().toInt(),
+    body('name').isString(),
+    resolver(residueController.listByResidueName))
+
+anounceRoutes.patch('/updateanouncequantity',
+    body('id').isBoolean(),
+    body('acepted').isBoolean(),
+    residueController.updateAnounceQuantity)
+
 anounceRoutes.post('/create',
     body('title').isString(),
     body('description').isString(),
     body('unit').isString().custom((value) => {
-        
+
         if (value == 'unit' || value == 'kg') {
-            return true; 
+            return true;
         }
         throw new Error('O valor deve ser kg ou unit.');
         // Se a validação passar, retorne true

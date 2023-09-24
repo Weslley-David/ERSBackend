@@ -4,12 +4,13 @@ import { prisma } from "../database/index"
 import { DatabaseError } from "../../errors";
 
 export class AnounceRepository {
-    
+
     listAnounce = async (skip: number, take: number): Promise<anounce[]> => {
         const anounce = await prisma.anounce.findMany({
             skip: skip,
             take: take,
-        })
+        },
+        )
 
         if (!anounce) {
             throw new DatabaseError("Coud'not recover data");
@@ -17,7 +18,24 @@ export class AnounceRepository {
 
         return anounce
     }
+    listAnounceByResidue = async (skip: number, take: number, name: string): Promise<anounce[]> => {
+        const anounce = await prisma.anounce.findMany({
+            skip: skip,
+            take: take,
+            where:{
+                residue:{
+                    name: name
+                }
+            }
+        },
+        )
 
+        if (!anounce) {
+            throw new DatabaseError("Coud'not recover data");
+        }
+
+        return anounce
+    }
     listAnounceByAnouncerId = async (id: string) => {
         const anounces = await prisma.anounce.findMany({
             where: {
@@ -60,6 +78,7 @@ export class AnounceRepository {
         return anounce
     }
 
+
     updateAnounce = async (anounce_info: anounce): Promise<anounce> => {
         const updateanounce = await prisma.anounce.update({
             where: {
@@ -78,7 +97,7 @@ export class AnounceRepository {
 
         return updateanounce
     }
-    updateAnounceQuantity =async (id: string, quantity: number) => {
+    updateAnounceQuantity = async (id: string, quantity: number) => {
         const updatedProposal = await prisma.anounce.update({
             where: {
                 id: id,
@@ -92,8 +111,27 @@ export class AnounceRepository {
             throw new DatabaseError("Coud'not recover data of email");
         }
         return updatedProposal
-        
+
     }
+
+    updateAnounceQuantityAndTotal = async (id: string, quantity: number, total: number) => {
+        const updatedProposal = await prisma.anounce.update({
+            where: {
+                id: id,
+            },
+            data: {
+                quantity: quantity,
+                total: total
+            },
+        })
+
+        if (!updatedProposal) {
+            throw new DatabaseError("Coud'not recover data of email");
+        }
+        return updatedProposal
+
+    }
+
     deleteAnounce = async (id: string) => {
         const deletedAnounce = await prisma.anounce.deleteMany({
             where: {
