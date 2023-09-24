@@ -2,7 +2,6 @@ import { validationResult } from "express-validator";
 import { ProfileService } from "../services/profile";
 import { Request, Response } from "express";
 import { RequestError } from "../errors";
-import puppeteer from "puppeteer";
 
 export class ProfileController {
     constructor(
