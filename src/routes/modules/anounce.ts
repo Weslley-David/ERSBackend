@@ -6,12 +6,12 @@ import { body } from 'express-validator';
 const anounceRoutes = Router()
 
 const residueController = new AnounceController()
-anounceRoutes.get('/list',
+anounceRoutes.post('/list',
     body('skip').isInt().toInt(),
     body('take').isInt().toInt(),
     resolver(residueController.list))
 
-anounceRoutes.get('/listbyresiduename',
+anounceRoutes.post('/listbyresiduename',
     body('skip').isInt().toInt(),
     body('take').isInt().toInt(),
     body('name').isString(),

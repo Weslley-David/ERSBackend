@@ -6,7 +6,7 @@ import { body } from "express-validator";
 const residueRoutes = Router()
 
 const residueController = new ResidueController()
-residueRoutes.get('/list',
+residueRoutes.post('/list',
     body('skip').isNumeric().isInt().toInt(),
     body('take').isNumeric().isInt().toInt(),
     resolver(residueController.list))

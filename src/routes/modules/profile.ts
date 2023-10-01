@@ -6,16 +6,16 @@ import { body, param } from "express-validator";
 const profileRoutes = Router()
 
 const profileController = new ProfileController()
-profileRoutes.get('/list',
+profileRoutes.post('/list',
     body('skip').isInt().toInt(),
     body('take').isInt().toInt(),
     resolver(profileController.list))
 
-profileRoutes.get('/generaterelatory',
+profileRoutes.post('/generaterelatory',
     body('id').isUUID(),
     resolver(profileController.generateRelatory))
 
-profileRoutes.get('/:name',
+profileRoutes.post('/:name',
     param('name').isString(),
     resolver(profileController.getByUsername))
 
