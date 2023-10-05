@@ -11,6 +11,12 @@ profileRoutes.post('/list',
     body('take').isInt().toInt(),
     resolver(profileController.list))
 
+profileRoutes.get('/list',
+    param('skip'),
+    param('take'),
+    resolver(profileController.plist))
+
+
 profileRoutes.post('/generaterelatory',
     body('id').isUUID(),
     resolver(profileController.generateRelatory))

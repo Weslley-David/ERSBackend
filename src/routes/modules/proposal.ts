@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { ProposalController } from "../../controllers/proposal";
 import { resolver } from "../../utils/routeAdapters";
-import { body } from "express-validator";
+import { body, param, query } from "express-validator";
 
 const proposalRoutes = Router()
 
@@ -11,9 +11,18 @@ proposalRoutes.post('/list',
     body('take').isInt().toInt(),
     resolver(proposalController.list))
 
+proposalRoutes.get('/list',
+    query('skip').isInt(),
+    query('take').isInt(),
+    resolver(proposalController.plist))
+
 proposalRoutes.post('/myproposals',
-    body('id').isUUID(),
+    query('id').isUUID(),
     resolver(proposalController.myproposals))
+
+proposalRoutes.get('/myproposals',
+    query('id').isString(),
+    resolver(proposalController.pmyproposals))
 
 proposalRoutes.post('/proposalsbyanounceid',
     body('id').isUUID(),

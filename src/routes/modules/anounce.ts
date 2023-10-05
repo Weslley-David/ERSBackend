@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AnounceController } from "../../controllers/anounce";
 import { resolver } from "../../utils/routeAdapters";
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 
 const anounceRoutes = Router()
 
@@ -11,6 +11,10 @@ anounceRoutes.post('/list',
     body('take').isInt().toInt(),
     resolver(residueController.list))
 
+anounceRoutes.get('/list',
+    param('skip'),
+    param('take'),
+    resolver(residueController.plist))
 anounceRoutes.post('/listbyresiduename',
     body('skip').isInt().toInt(),
     body('take').isInt().toInt(),

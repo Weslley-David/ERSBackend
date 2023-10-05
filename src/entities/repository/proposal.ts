@@ -40,7 +40,7 @@ export class ProposalRepository {
         });
 
         if (!proposal) {
-            throw new DatabaseError("Coud'not recover data of email");
+            throw new DatabaseError("Coud'not recover data of user");
         }
 
         return proposal;
@@ -49,7 +49,7 @@ export class ProposalRepository {
     getProposalById = async (id: string): Promise<proposal> => {
         const proposal = await prisma.proposal.findUnique({ where: { id: id } })
         if (!proposal) {
-            throw new DatabaseError("Coud'not recover data of email");
+            throw new DatabaseError("Coud'not recover data of user");
         }
         return proposal
     }
