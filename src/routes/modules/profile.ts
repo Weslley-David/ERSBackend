@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { ProfileController } from "../../controllers/profile";
 import { resolver } from "../../utils/routeAdapters";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 const profileRoutes = Router()
 
@@ -12,8 +12,8 @@ profileRoutes.post('/list',
     resolver(profileController.list))
 
 profileRoutes.get('/list',
-    param('skip'),
-    param('take'),
+    query('skip').isInt(),
+    query('take').isInt(),
     resolver(profileController.plist))
 
 
