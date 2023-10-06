@@ -12,7 +12,7 @@ app.use(cors())
 app.use(express.json())
 
 app.get('/', (req: Request, res: Response) => {
-    res.json({ "working": "fine" })
+    res.json({ "working": "good" })
 })
 
 app.get('/error', (req: Request, res: Response) => {
