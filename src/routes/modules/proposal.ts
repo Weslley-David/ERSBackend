@@ -6,26 +6,17 @@ import { body, param, query } from "express-validator";
 const proposalRoutes = Router()
 
 const proposalController = new ProposalController()
-proposalRoutes.post('/list',
-    body('skip').isInt().toInt(),
-    body('take').isInt().toInt(),
-    resolver(proposalController.list))
-
 proposalRoutes.get('/list',
     query('skip').isInt(),
     query('take').isInt(),
-    resolver(proposalController.plist))
-
-proposalRoutes.post('/myproposals',
-    query('id').isUUID(),
-    resolver(proposalController.myproposals))
+    resolver(proposalController.list))
 
 proposalRoutes.get('/myproposals',
     query('id').isString(),
-    resolver(proposalController.pmyproposals))
+    resolver(proposalController.myproposals))
 
-proposalRoutes.post('/proposalsbyanounceid',
-    body('id').isUUID(),
+proposalRoutes.get('/proposalsbyanounceid',
+    query('id').isUUID(),
     resolver(proposalController.proposalsByAnounceId))
 
 proposalRoutes.patch('/updateacepted',

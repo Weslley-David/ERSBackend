@@ -13,32 +13,11 @@ export class ProposalController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { skip, take } = req.body
-        const result = await this.porposalService.list(skip, take)
-        return res.json(result).status(200)
-    }
-
-    plist = async (req: Request, res: Response) => {
-        const validation_result = validationResult(req);
-        if (!validation_result.isEmpty()) {
-            throw new RequestError('wrong form fields', validation_result)
-        }
         const result = await this.porposalService.list(parseInt(req.query.skip + ""), parseInt(req.query.take + ""))
         return res.json(result).status(200)
     }
 
     myproposals = async (req: Request, res: Response) => {
-        const validation_result = validationResult(req);
-        if (!validation_result.isEmpty()) {
-            throw new RequestError('wrong form fields', validation_result)
-        }
-        const { id } = req.body
-        const result = await this.porposalService.myProposals(id)
-        return res.json(result).status(200)
-
-    }
-
-    pmyproposals = async (req: Request, res: Response) => {
         const validation_result = validationResult(req);
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
@@ -50,8 +29,12 @@ export class ProposalController {
     }
 
     proposalsByAnounceId = async (req: Request, res: Response) => {
-        const { id } = req.body
-        const result = await this.porposalService.proposalsByAnounce(id)
+        const validation_result = validationResult(req);
+        if (!validation_result.isEmpty()) {
+            throw new RequestError('wrong form fields', validation_result)
+        }
+        const { id } = req.query
+        const result = await this.porposalService.proposalsByAnounce(id+"")
         return res.json(result).status(200)
 
     }

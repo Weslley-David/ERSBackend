@@ -16,16 +16,16 @@ export class AnounceService {
         return (anounce)
     }
 
-    updateAnounceQuantity =async (id: string, quantity: number) => {
+    incrementAnounceQuantity =async (id: string, quantity: number) => {
 
 
         if(quantity < 0){
-            throw new DomainLogicError("quantity doesnt matches");
+            throw new DomainLogicError("quantity not accepted");
         }
 
 
         const anounce: anounce = await this.anounceRepository.getAnounceById(id)
-        const updatedAnounce = await this.anounceRepository.updateAnounceQuantityAndTotal(id, parseFloat(anounce.quantity+"") - parseFloat(quantity+""), parseFloat(anounce.total+"") - parseFloat(quantity+""))
+        const updatedAnounce = await this.anounceRepository.updateAnounceQuantityAndTotal(id, parseFloat(anounce.quantity+"") + parseFloat(quantity+""), parseFloat(anounce.total+"") + parseFloat(quantity+""))
         return (updatedAnounce)
     }
 

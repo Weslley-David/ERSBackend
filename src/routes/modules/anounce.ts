@@ -6,25 +6,20 @@ import { body, param, query } from 'express-validator';
 const anounceRoutes = Router()
 
 const residueController = new AnounceController()
-anounceRoutes.post('/list',
-    body('skip').isInt().toInt(),
-    body('take').isInt().toInt(),
-    resolver(residueController.list))
-
 anounceRoutes.get('/list',
     query('skip').isInt(),
     query('take').isInt(),
-    resolver(residueController.plist))
-anounceRoutes.post('/listbyresiduename',
-    body('skip').isInt().toInt(),
-    body('take').isInt().toInt(),
-    body('name').isString(),
+    resolver(residueController.list))
+anounceRoutes.get('/listbyresiduename',
+    query('skip').isInt().toInt(),
+    query('take').isInt().toInt(),
+    query('name').isString(),
     resolver(residueController.listByResidueName))
 
 anounceRoutes.patch('/updateanouncequantity',
-    body('id').isBoolean(),
-    body('acepted').isBoolean(),
-    residueController.updateAnounceQuantity)
+    body('id').isUUID(),
+    body('quantity').isNumeric(),
+    resolver(residueController.updateAnounceQuantity))
 
 anounceRoutes.post('/create',
     body('title').isString(),
@@ -35,7 +30,6 @@ anounceRoutes.post('/create',
             return true;
         }
         throw new Error('O valor deve ser kg ou unit.');
-        // Se a validação passar, retorne true
     }),
     body('quantity').isNumeric().toFloat(),
     body('total').isNumeric().toFloat(),

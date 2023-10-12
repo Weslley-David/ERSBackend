@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AuthController } from "../../controllers/auth";
 import { resolver } from "../../utils/routeAdapters";
 import { body } from 'express-validator';
+import { TokenMiddleware } from "../../middlewares/tokenmiddleware";
 
 
 const authRoutes = Router()
@@ -25,15 +26,17 @@ authRoutes.post('/signup',
         if (typeof value !== 'string' && value !== null) {
             throw new Error('O valor deve ser uma string ou null.');
         }
-        return true; // Se a validação passar, retorne true
+        return true;
     }),
     body('image_url').custom((value) => {
         if (typeof value !== 'string' && value !== null) {
             throw new Error('O valor deve ser uma string ou null.');
         }
-        return true; // Se a validação passar, retorne true
+        return true;
     }),
 
     resolver(authController.signup))
+
+authRoutes.get('/verifytoken', TokenMiddleware, resolver(authController.verifytoken))
 
 export default authRoutes

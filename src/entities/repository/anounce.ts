@@ -126,7 +126,7 @@ export class AnounceRepository {
         })
 
         if (!updatedProposal) {
-            throw new DatabaseError("Coud'not recover data of email");
+            throw new DatabaseError("Coud'not recover data of id");
         }
         return updatedProposal
 

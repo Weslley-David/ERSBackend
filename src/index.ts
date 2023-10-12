@@ -15,17 +15,13 @@ app.get('/', (req: Request, res: Response) => {
     res.json({ "working": "good" })
 })
 
-app.get('/error', (req: Request, res: Response) => {
-    throw new InteralServerError("Error testado");
-})
-
 app.use(routes)
 
 app.listen(port, () => {
     console.log(`༼ つ ╹ ╹ ༽つ http://localhost:${port}`)
 })
 
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {//, 
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             res.status(500).json({

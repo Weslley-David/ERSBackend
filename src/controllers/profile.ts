@@ -13,16 +13,6 @@ export class ProfileController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { skip, take } = req.body
-        const result = await this.profileService.list(skip, take)
-        return res.json(result).status(200)
-    }
-
-    plist = async (req: Request, res: Response) => {
-        const validation_result = validationResult(req);
-        if (!validation_result.isEmpty()) {
-            throw new RequestError('wrong form fields', validation_result)
-        }
         const result = await this.profileService.list(parseInt(req.query.skip + ""), parseInt(req.query.take + ""))
         return res.json(result).status(200)
     }
@@ -32,7 +22,7 @@ export class ProfileController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { id } = req.body
+        const { id } = req.params
         
         const result = await this.profileService.generateDashboad(id)
         // const browser = await puppeteer.launch({ headless: "new" });
@@ -49,7 +39,7 @@ export class ProfileController {
         return res.json(result).status(200)
     }
     getByUsername = async (req: Request, res: Response) => {
-        const username: string = String(req.params.name)
+        const username: string = req.params.name
         const result = await this.profileService.getByUsername(username)
         return res.json(result).status(200)
     }

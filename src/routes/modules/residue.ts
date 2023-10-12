@@ -6,15 +6,10 @@ import { body, param, query } from "express-validator";
 const residueRoutes = Router()
 
 const residueController = new ResidueController()
-residueRoutes.post('/list',
-    body('skip').isNumeric().isInt().toInt(),
-    body('take').isNumeric().isInt().toInt(),
-    resolver(residueController.list))
-
-    residueRoutes.get('/list',
+residueRoutes.get('/list',
     query('skip'),
     query('take'),
-    resolver(residueController.plist))
+    resolver(residueController.list))
 
 
 export default residueRoutes

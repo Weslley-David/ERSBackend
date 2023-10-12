@@ -7,18 +7,7 @@ export class AnounceController {
     constructor(
         private anounceService: AnounceService = new AnounceService()
     ) { }
-
     list = async (req: Request, res: Response) => {
-        const validation_result = validationResult(req);
-        if (!validation_result.isEmpty()) {
-            throw new RequestError('wrong form fields', validation_result)
-        }
-        const { skip, take } = req.body
-        const result = await this.anounceService.list(skip, take)
-        return res.json(result).status(200)
-    }
-
-    plist = async (req: Request, res: Response) => {
         const validation_result = validationResult(req);
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
@@ -32,8 +21,8 @@ export class AnounceController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { skip, take, name } = req.body
-        const result = await this.anounceService.listByResidueName(skip, take, name)
+        const { skip, take, name } = req.query
+        const result = await this.anounceService.listByResidueName(parseInt(req.query.skip + ""), parseInt(req.query.take + ""), name + "")
         return res.json(result).status(200)
     }
 
@@ -43,7 +32,7 @@ export class AnounceController {
             throw new RequestError('wrong form fields', validation_result)
         }
         const { id, quantity } = req.body
-        const result = await this.anounceService.updateAnounceQuantity(id, quantity)
+        const result = await this.anounceService.incrementAnounceQuantity(id, quantity)
         return res.json(result).status(201)
     }
     create = async (req: Request, res: Response) => {
