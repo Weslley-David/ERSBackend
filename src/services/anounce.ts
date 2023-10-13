@@ -6,6 +6,12 @@ export class AnounceService {
     constructor(
         private anounceRepository: AnounceRepository = new AnounceRepository()
     ) { }
+
+    detailResidue = async (id: string) => {
+        const anounce: anounce = await this.anounceRepository.getAnounceById(id)
+        return (anounce)
+    }
+
     list = async (skip: number, take: number) => {
         const anounce: anounce[] = await this.anounceRepository.listAnounce(skip, take)
         return (anounce)
@@ -16,7 +22,7 @@ export class AnounceService {
         return (anounce)
     }
 
-    incrementAnounceQuantity =async (id: string, quantity: number) => {
+    incrementAnounceQuantity =async (id: string, quantity: number, user_id: string) => {
 
 
         if(quantity < 0){
@@ -25,6 +31,10 @@ export class AnounceService {
 
 
         const anounce: anounce = await this.anounceRepository.getAnounceById(id)
+        console.log(anounce.anouncer_fk, " - ", user_id)
+        if (anounce.anouncer_fk != user_id) {
+            throw new DomainLogicError("you cant alter other users posts")
+        }
         const updatedAnounce = await this.anounceRepository.updateAnounceQuantityAndTotal(id, parseFloat(anounce.quantity+"") + parseFloat(quantity+""), parseFloat(anounce.total+"") + parseFloat(quantity+""))
         return (updatedAnounce)
     }

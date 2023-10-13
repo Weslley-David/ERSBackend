@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ProfileController } from "../../controllers/profile";
 import { resolver } from "../../utils/routeAdapters";
 import { body, param, query } from "express-validator";
+import TokenMiddleware from "../../middlewares/tokenmiddleware";
 
 const profileRoutes = Router()
 
@@ -11,9 +12,8 @@ profileRoutes.get('/list',
     query('take').isInt(),
     resolver(profileController.list))
 
-
-profileRoutes.get('/generaterelatory/:id',
-    param('id').isUUID(),
+profileRoutes.get('/generaterelatory',
+    TokenMiddleware,
     resolver(profileController.generateRelatory))
 
 profileRoutes.get('/:name',

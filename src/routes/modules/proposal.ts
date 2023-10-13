@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ProposalController } from "../../controllers/proposal";
 import { resolver } from "../../utils/routeAdapters";
 import { body, param, query } from "express-validator";
+import TokenMiddleware from "../../middlewares/tokenmiddleware";
 
 const proposalRoutes = Router()
 
@@ -12,8 +13,12 @@ proposalRoutes.get('/list',
     resolver(proposalController.list))
 
 proposalRoutes.get('/myproposals',
-    query('id').isString(),
+    TokenMiddleware,
     resolver(proposalController.myproposals))
+
+proposalRoutes.get('/proposalsforme',
+    TokenMiddleware,
+    resolver(proposalController.proposalsForMe))
 
 proposalRoutes.get('/proposalsbyanounceid',
     query('id').isUUID(),
@@ -22,12 +27,13 @@ proposalRoutes.get('/proposalsbyanounceid',
 proposalRoutes.patch('/updateacepted',
     body('id').isUUID(),
     body('acepted').isBoolean(),
+    TokenMiddleware,
     resolver(proposalController.updateProposalAcepted))
 
-proposalRoutes.patch('/updatestatus',
+proposalRoutes.patch('/markasunreceived',
     body('id').isUUID(),
-    body('status').isBoolean(),
-    resolver(proposalController.updateProposalStatus))
+    TokenMiddleware,
+    resolver(proposalController.markAsUnreceived))
 
 proposalRoutes.post('/create',
     body('description').isString(),

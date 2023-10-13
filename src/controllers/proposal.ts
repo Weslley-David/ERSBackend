@@ -22,8 +22,19 @@ export class ProposalController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { id } = req.query
-        const result = await this.porposalService.myProposals(String(id))
+        const id = res.locals.id;
+        const result = await this.porposalService.proposalsFromMe(id)
+        return res.json(result).status(200)
+
+    }
+
+    proposalsForMe = async (req: Request, res: Response) => {
+        const validation_result = validationResult(req);
+        if (!validation_result.isEmpty()) {
+            throw new RequestError('wrong form fields', validation_result)
+        }
+        const id = res.locals.id;
+        const result = await this.porposalService.proposalsForMe(id)
         return res.json(result).status(200)
 
     }
@@ -39,13 +50,14 @@ export class ProposalController {
 
     }
 
-    updateProposalStatus = async (req: Request, res: Response) => {
+    markAsUnreceived = async (req: Request, res: Response) => {
         const validation_result = validationResult(req);
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { id, status } = req.body
-        const result = await this.porposalService.updateStatus(id, status)
+        const { id } = req.body
+        const user_id = res.locals.id
+        const result = await this.porposalService.markAsUnreceived(id, user_id)
         return res.json(result).status(200)
 
     }
@@ -56,7 +68,8 @@ export class ProposalController {
             throw new RequestError('wrong form fields', validation_result)
         }
         const { id, acepted } = req.body
-        const result = await this.porposalService.updateAcepted(id, acepted)
+        const user_id = res.locals.id;
+        const result = await this.porposalService.updateAcepted(id, acepted, user_id)
         return res.json(result).status(200)
 
     }

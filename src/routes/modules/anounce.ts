@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AnounceController } from "../../controllers/anounce";
 import { resolver } from "../../utils/routeAdapters";
 import { body, param, query } from 'express-validator';
+import TokenMiddleware from "../../middlewares/tokenmiddleware";
 
 const anounceRoutes = Router()
 
@@ -19,8 +20,12 @@ anounceRoutes.get('/listbyresiduename',
 anounceRoutes.patch('/updateanouncequantity',
     body('id').isUUID(),
     body('quantity').isNumeric(),
+    TokenMiddleware,
     resolver(residueController.updateAnounceQuantity))
 
+anounceRoutes.get('/:id',
+    param('id').isUUID(),
+    resolver(residueController.detailResidue))
 anounceRoutes.post('/create',
     body('title').isString(),
     body('description').isString(),
@@ -33,8 +38,8 @@ anounceRoutes.post('/create',
     }),
     body('quantity').isNumeric().toFloat(),
     body('total').isNumeric().toFloat(),
-    body('anouncer_fk').isUUID(),
     body('residue_fk').isUUID(),
+    TokenMiddleware,
     resolver(residueController.create))
 
 export default anounceRoutes

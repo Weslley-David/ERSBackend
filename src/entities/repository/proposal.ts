@@ -46,6 +46,18 @@ export class ProposalRepository {
         return proposal;
     }
 
+    listProposalsByAnouncerId = async (id: string): Promise<proposal[]> => {
+        const proposal = await prisma.proposal.findMany({
+            where: {
+              anounce: {
+                anouncer_fk: id,
+              },
+            },
+          });
+
+        return proposal;
+    }
+
     getProposalById = async (id: string): Promise<proposal> => {
         const proposal = await prisma.proposal.findUnique({ where: { id: id } })
         if (!proposal) {
@@ -62,6 +74,7 @@ export class ProposalRepository {
             },
             data: {
                 acepted: acepted,
+                status: true
             },
         })
 

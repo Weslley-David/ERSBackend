@@ -22,20 +22,9 @@ export class ProfileController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { id } = req.params
+        const id = res.locals.id;
         
         const result = await this.profileService.generateDashboad(id)
-        // const browser = await puppeteer.launch({ headless: "new" });
-        // const page = await browser.newPage();
-        // await page.setContent(result);
-
-        // const pdfBuffer = await page.pdf({ format: 'A4', landscape: false });
-
-        // await browser.close();
-
-        // res.setHeader('Content-Type', 'application/pdf');
-        // res.setHeader('Content-Disposition', 'attachment; filename=certificate.pdf');
-        // res.send(pdfBuffer);
         return res.json(result).status(200)
     }
     getByUsername = async (req: Request, res: Response) => {

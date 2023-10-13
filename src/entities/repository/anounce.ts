@@ -49,7 +49,7 @@ export class AnounceRepository {
     getAnounceById = async (id: string): Promise<anounce> => {
         const anounce = await prisma.anounce.findUnique({ where: { id: id } })
         if (!anounce) {
-            throw new DatabaseError("Coud'not recover data of email");
+            throw new DatabaseError("Coud'not recover data of anounce");
         }
         return anounce
     }
@@ -67,7 +67,7 @@ export class AnounceRepository {
             data: {
                 title: title,
                 description: description,
-                quantity: quantity,
+                quantity: total,
                 unit: unit,
                 total: total,
                 anouncer_fk: anouncer_fk,

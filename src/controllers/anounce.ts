@@ -7,6 +7,16 @@ export class AnounceController {
     constructor(
         private anounceService: AnounceService = new AnounceService()
     ) { }
+
+    detailResidue = async (req: Request, res: Response) => {
+        const validation_result = validationResult(req);
+        if (!validation_result.isEmpty()) {
+            throw new RequestError('wrong form fields', validation_result)
+        }
+        const result = await this.anounceService.detailResidue(req.params.id)
+        return res.json(result).status(200)
+    }
+
     list = async (req: Request, res: Response) => {
         const validation_result = validationResult(req);
         if (!validation_result.isEmpty()) {
@@ -31,8 +41,9 @@ export class AnounceController {
         if (!validation_result.isEmpty()) {
             throw new RequestError('wrong form fields', validation_result)
         }
-        const { id, quantity } = req.body
-        const result = await this.anounceService.incrementAnounceQuantity(id, quantity)
+        const { quantity, id } = req.body
+        const user_id = res.locals.id;
+        const result = await this.anounceService.incrementAnounceQuantity(id, quantity, user_id)
         return res.json(result).status(201)
     }
     create = async (req: Request, res: Response) => {
@@ -41,7 +52,8 @@ export class AnounceController {
             throw new RequestError('wrong form fields', validation_result)
         }
         const {
-            title, description, unit, quantity, total, anouncer_fk, residue_fk } = req.body
+            title, description, unit, quantity, total, residue_fk } = req.body
+        const anouncer_fk = res.locals.id;
         const result = await this.anounceService.createAnounce(
             title, description, unit, quantity, total, anouncer_fk, residue_fk
         )

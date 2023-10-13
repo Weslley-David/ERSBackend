@@ -12,20 +12,27 @@ export class ProposalService {
         return (proposal)
     }
 
-    myProposals = async (id: string) => {
+    proposalsFromMe = async (id: string) => {
+        //lista as propostas que um usuário enviou
         const proposal: proposal[] = await this.proposalRepository.listProposalsByProposerId(id)
         return (proposal)
     }
 
-    proposalsByAnounce =async (id: string) => {
+    proposalsForMe = async (id: string) => {
+        //lista as propostas que um usuário enviou
+        const proposal: proposal[] = await this.proposalRepository.listProposalsByAnouncerId(id)
+        return (proposal)
+    }
+
+    proposalsByAnounce = async (id: string) => {
         const proposal: proposal[] = await this.proposalRepository.listProposalsByAnounceId(id)
         return (proposal)
     }
 
 
-    updateAcepted =async (id: string, acepted: boolean) => {
+    updateAcepted = async (id: string, acepted: boolean, creator: string) => {
 
-        if(acepted == false){
+        if (acepted == false) {
             const updatedProposal = await this.proposalRepository.updateProposalAcepted(id, acepted)
             return updatedProposal
         }
@@ -33,36 +40,37 @@ export class ProposalService {
         const proposal: proposal = await this.proposalRepository.getProposalById(id)
         const anounce: anounce = await this.anounceRepository.getAnounceById(proposal.anounce_fk)
 
-        
-
-        if(anounce.quantity < proposal.quantity){
+        if (anounce.anouncer_fk != creator) {
+            throw new DomainLogicError("you cant accept something that is not yours");
+        }
+        if (anounce.quantity < proposal.quantity) {
             throw new DomainLogicError("quantity doesnt matches");
         }
 
-        if(acepted == true){
+        if (acepted == true) {
             const updatedProposal = await this.proposalRepository.updateProposalAcepted(id, acepted)
             //por incrível que pareça, funciona
-            await this.anounceRepository.updateAnounceQuantity(anounce.id, parseFloat(anounce.quantity+"") - parseFloat(proposal.quantity+""))
+            await this.anounceRepository.updateAnounceQuantity(anounce.id, parseFloat(anounce.quantity + "") - parseFloat(proposal.quantity + ""))
             return (updatedProposal)
         }
-        
+
     }
 
-    updateStatus =async (id: string, status: boolean) => {
-        if(status == true){
-            
-            const proposal: proposal = await this.proposalRepository.getProposalById(id)
-            if (proposal.status != false && proposal.acepted == true){
-                const anounce: anounce = await this.anounceRepository.getAnounceById(proposal.anounce_fk)
+    markAsUnreceived = async (id: string, user_id: string) => {
+        const proposal: proposal = await this.proposalRepository.getProposalById(id)
+        const anounce: anounce = await this.anounceRepository.getAnounceById(proposal.anounce_fk)
+        if (anounce.anouncer_fk != user_id) {
+            throw new DomainLogicError("you cant unreceive something that is not yours");
 
-                const updatedProposal = await this.anounceRepository.updateAnounceQuantity(anounce.id, parseFloat(anounce.quantity+"") + parseFloat(proposal.quantity+""))
-                
-                return updatedProposal
-            }
-           
         }
-        const updatedProposal = await this.proposalRepository.updateProposalStatus(id, status)
-        return updatedProposal
+        if (proposal.status != false && proposal.acepted == true) {
+            await this.anounceRepository.updateAnounceQuantity(anounce.id, parseFloat(anounce.quantity + "") + parseFloat(proposal.quantity + ""))
+            const updatedProposal = await this.proposalRepository.updateProposalStatus(proposal.id, false)
+            return updatedProposal
+        }else{
+            throw new DomainLogicError("you cant set something that is not accepted or is already canceled");
+        }
+
     }
 
     createProposal = async (
