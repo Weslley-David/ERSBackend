@@ -14,15 +14,27 @@ export interface DashboardData {
 }
 
 export class ProfileRepository {
-    listProfile = async (skip: number, take: number): Promise<profile[]> => {
+    listProfile = async (skip: number, take: number) => {
         const profile = await prisma.profile.findMany({
             skip: skip,
             take: take,
-        })
+            select: {
+                id: true,
+                username: true,
+                name: true,
+                type: true,
+                uf: true,
+                city: true,
+                phone: true,
+                image_url: true
 
-        if (!profile) {
-            throw new DatabaseError("Coud'not recover data");
+            }
         }
+        )
+
+        // if (!profile) {
+        //     throw new DatabaseError("Coud'not recover data");
+        // }
 
         return profile
     }
@@ -48,7 +60,7 @@ export class ProfileRepository {
     ORDER BY
         r.name;
     `
-    if (!result) {
+        if (!result) {
             throw new DatabaseError("Coud'not recover data of email");
         }
         return result;
@@ -69,8 +81,19 @@ export class ProfileRepository {
         return profile
     }
 
-    getProfileByUsername = async (username: string): Promise<profile> => {
-        const profile = await prisma.profile.findUnique({ where: { username: username } })
+    getProfileByUsername = async (username: string) => {
+        const profile = await prisma.profile.findUnique({
+            where: { username: username }, select: {
+                id: true,
+                username: true,
+                name: true,
+                type: true,
+                uf: true,
+                city: true,
+                phone: true,
+                image_url: true
+            }
+        })
         if (!profile) {
             throw new DatabaseError("Coud'not find the informed username");
         }

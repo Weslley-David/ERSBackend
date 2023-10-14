@@ -17,6 +17,11 @@ anounceRoutes.get('/listbyresiduename',
     query('name').isString(),
     resolver(residueController.listByResidueName))
 
+anounceRoutes.get('/listbyanouncerid',
+    query('skip').isInt().toInt(),
+    query('take').isInt().toInt(),
+    query('id').isUUID(),
+    resolver(residueController.listByAnouncerId))
 anounceRoutes.patch('/updateanouncequantity',
     body('id').isUUID(),
     body('quantity').isNumeric(),

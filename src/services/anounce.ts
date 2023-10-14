@@ -22,6 +22,11 @@ export class AnounceService {
         return (anounce)
     }
 
+    listByAnouncerId = async (skip: number, take: number, name: string) => {
+        const anounce: anounce[] = await this.anounceRepository.listAnounceByAnouncerId(skip, take, name)
+        return (anounce)
+    }
+
     incrementAnounceQuantity =async (id: string, quantity: number, user_id: string) => {
 
 

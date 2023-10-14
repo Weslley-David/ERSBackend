@@ -35,6 +35,15 @@ export class AnounceController {
         const result = await this.anounceService.listByResidueName(parseInt(req.query.skip + ""), parseInt(req.query.take + ""), name + "")
         return res.json(result).status(200)
     }
+    listByAnouncerId = async (req: Request, res: Response) => {
+        const validation_result = validationResult(req);
+        if (!validation_result.isEmpty()) {
+            throw new RequestError('wrong form fields', validation_result)
+        }
+        const { skip, take, id } = req.query
+        const result = await this.anounceService.listByAnouncerId(parseInt(skip + ""), parseInt(take + ""), id + "")
+        return res.json(result).status(200)
+    }
 
     updateAnounceQuantity = async (req: Request, res: Response) => {
         const validation_result = validationResult(req);

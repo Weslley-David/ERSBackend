@@ -3,6 +3,7 @@ import { Profile } from "../entities/models/profile"
 import { ProfileRepository } from "../entities/repository/profile"
 import { AcessDeniedError } from "../errors"
 import { generateTokens } from "../utils/generateTokens/generatePairOfTokens"
+import { generateSHA256 } from "../utils/encriptors/generateSHA"
 // import { generateRandomCode } from "../suporters/utils/generateRandomCode"
 // import { AcessDeniedError } from "../Errors/error"
 // import { generateTokens } from "../suporters/utils/generateTokens"
@@ -25,7 +26,7 @@ export class AuthService {
         return await this.profileRepository.createProfile(
             email,
             username,
-            password,
+            generateSHA256(password),
             cnpj,
             name,
             trading_name,
@@ -38,12 +39,9 @@ export class AuthService {
 
     login = async (email: string, password: string) => {
         const profile: profile = await this.profileRepository.getProfileByEmail(email)
-        if (profile.password !== password) {
+        if (profile.password !== generateSHA256(password)) {
             throw new AcessDeniedError("password doesn't matches")
         }
-
-        //função para criar os tokens
-
         let [acetoken, reftoken] = generateTokens(profile.id, profile.username, profile.type)
 
         return ({ "signin": true, "id": profile.id, "username": profile.username, "type": profile.type , "acetoken": acetoken, "reftoken": reftoken}) //"acetoken": acetoken, "reftoken": reftoken,

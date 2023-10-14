@@ -17,6 +17,7 @@ model anounce {
   anouncer_fk String     @db.Uuid
   residue_fk  String     @db.Uuid
   created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  hide        Boolean?   @default(false)
   profile     profile    @relation(fields: [anouncer_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
   residue     residue    @relation(fields: [residue_fk], references: [id], onDelete: NoAction, onUpdate: NoAction)
   proposal    proposal[]
@@ -36,6 +37,7 @@ model profile {
   phone        String?    @db.VarChar
   image_url    String?    @db.VarChar
   created_at   DateTime?  @default(now()) @db.Timestamptz(6)
+  description  String?    @default("olá, estou usando RENOV") @db.VarChar(100)
   anounce      anounce[]
   proposal     proposal[]
 }

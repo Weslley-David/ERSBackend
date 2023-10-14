@@ -9,6 +9,7 @@ CREATE TABLE "anounce" (
     "anouncer_fk" UUID NOT NULL,
     "residue_fk" UUID NOT NULL,
     "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "hide" BOOLEAN DEFAULT false,
 
     CONSTRAINT "anounce_pkey" PRIMARY KEY ("id")
 );
@@ -28,6 +29,7 @@ CREATE TABLE "profile" (
     "phone" VARCHAR,
     "image_url" VARCHAR,
     "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "description" VARCHAR(100) DEFAULT 'olá, estou usando RENOV',
 
     CONSTRAINT "profile_pkey" PRIMARY KEY ("id")
 );

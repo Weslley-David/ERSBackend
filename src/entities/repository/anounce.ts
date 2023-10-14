@@ -36,8 +36,10 @@ export class AnounceRepository {
 
         return anounce
     }
-    listAnounceByAnouncerId = async (id: string) => {
+    listAnounceByAnouncerId = async (skip: number, take: number, id: string) => {
         const anounces = await prisma.anounce.findMany({
+            skip: skip,
+            take: take,
             where: {
                 anouncer_fk: id,
             },
