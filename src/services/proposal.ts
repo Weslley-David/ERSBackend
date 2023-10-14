@@ -67,7 +67,7 @@ export class ProposalService {
             await this.anounceRepository.updateAnounceQuantity(anounce.id, parseFloat(anounce.quantity + "") + parseFloat(proposal.quantity + ""))
             const updatedProposal = await this.proposalRepository.updateProposalStatus(proposal.id, false)
             return updatedProposal
-        }else{
+        } else {
             throw new DomainLogicError("you cant set something that is not accepted or is already canceled");
         }
 
@@ -79,6 +79,11 @@ export class ProposalService {
         quantity: number,
         proposer_fk: string,
         anounce_fk: string) => {
+
+        const anounce: anounce = await this.anounceRepository.getAnounceById(anounce_fk)
+        if (anounce.anouncer_fk == proposer_fk) {
+            throw new DomainLogicError("you cant buy from yourself");
+        }
         const proposal: proposal = await this.proposalRepository.createProposal(
             description,
             price,

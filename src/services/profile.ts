@@ -6,12 +6,12 @@ export class ProfileService {
         private profileRepository: ProfileRepository = new ProfileRepository()
     ) { }
     list = async (skip: number, take: number) => {
-        const profile: profile[] = await this.profileRepository.listProfile(skip, take)
+        const profile = await this.profileRepository.listProfile(skip, take)
         return (profile)
     }
 
     getByUsername = async (username: string) => {
-        const profile: profile = await this.profileRepository.getProfileByUsername(username)
+        const profile = await this.profileRepository.getProfileByUsername(username)
         return (profile)
     }
 

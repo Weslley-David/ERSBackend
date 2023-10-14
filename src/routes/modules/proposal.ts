@@ -41,5 +41,6 @@ proposalRoutes.post('/create',
     body('quantity').isNumeric().toFloat(),
     body('proposer_fk').isUUID(),
     body('anounce_fk').isUUID(),
+    TokenMiddleware,
     resolver(proposalController.create))
 export default proposalRoutes

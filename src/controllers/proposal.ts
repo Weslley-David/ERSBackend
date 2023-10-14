@@ -45,7 +45,7 @@ export class ProposalController {
             throw new RequestError('wrong form fields', validation_result)
         }
         const { id } = req.query
-        const result = await this.porposalService.proposalsByAnounce(id+"")
+        const result = await this.porposalService.proposalsByAnounce(id + "")
         return res.json(result).status(200)
 
     }
@@ -83,8 +83,9 @@ export class ProposalController {
             description,
             price,
             quantity,
-            proposer_fk,
             anounce_fk } = req.body
+
+        const proposer_fk = res.locals.id
         const result = await this.porposalService.createProposal(
             description,
             price,
