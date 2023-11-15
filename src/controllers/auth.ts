@@ -19,7 +19,7 @@ export class AuthController {
         }
         const { email, password } = req.body
         const login_result = await this.authService.login(email, password)
-        return res.json({ "sleep": login_result }).status(201)
+        return res.json(login_result).status(201)
     }
 
     verifytoken = async (req: Request, res: Response) => {
