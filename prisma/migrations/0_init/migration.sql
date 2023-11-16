@@ -61,9 +61,6 @@ CREATE TABLE "residue" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "anounce_title_key" ON "anounce"("title");
-
--- CreateIndex
 CREATE UNIQUE INDEX "profile_email_key" ON "profile"("email");
 
 -- CreateIndex

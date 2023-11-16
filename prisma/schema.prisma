@@ -9,7 +9,7 @@ datasource db {
 
 model anounce {
   id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title       String     @unique @db.VarChar
+  title       String     @db.VarChar
   description String?    @db.VarChar
   unit        String     @db.VarChar
   quantity    Decimal    @db.Decimal(15, 2)
