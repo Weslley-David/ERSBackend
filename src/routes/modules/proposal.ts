@@ -39,7 +39,6 @@ proposalRoutes.post('/create',
     body('description').isString(),
     body('price').isNumeric().toFloat(),
     body('quantity').isNumeric().toFloat(),
-    body('proposer_fk').isUUID(),
     body('anounce_fk').isUUID(),
     TokenMiddleware,
     resolver(proposalController.create))
