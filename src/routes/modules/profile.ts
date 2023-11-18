@@ -12,6 +12,10 @@ profileRoutes.get('/list',
     query('take').isInt(),
     resolver(profileController.list))
 
+profileRoutes.get('/find/:id',
+    param('id').isString(),
+    resolver(profileController.getById))
+
 profileRoutes.get('/generaterelatory',
     TokenMiddleware,
     resolver(profileController.generateRelatory))

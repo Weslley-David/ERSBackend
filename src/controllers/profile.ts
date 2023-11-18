@@ -33,5 +33,11 @@ export class ProfileController {
         return res.json(result).status(200)
     }
 
+    getById = async (req: Request, res: Response) => {
+        const id: string = req.params.id
+        const result = await this.profileService.getById(id)
+        return res.json(result).status(200)
+    }
+
 
 }

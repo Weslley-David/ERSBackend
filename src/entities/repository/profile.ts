@@ -100,6 +100,25 @@ export class ProfileRepository {
         return profile
     }
 
+    getProfileByIdSummary = async (id: string) => {
+        const profile = await prisma.profile.findUnique({
+            where: { id: id }, select: {
+                id: true,
+                username: true,
+                name: true,
+                type: true,
+                uf: true,
+                city: true,
+                phone: true,
+                image_url: true
+            }
+        })
+        if (!profile) {
+            throw new DatabaseError("Coud'not find the informed id");
+        }
+        return profile
+    }
+
     updatePhone = async (id: string, phone: string): Promise<profile> => {
 
         const updatedProfile = await prisma.profile.update({

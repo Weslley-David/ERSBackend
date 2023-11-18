@@ -15,6 +15,11 @@ export class ProfileService {
         return (profile)
     }
 
+    getById = async (id: string) => {
+        const profile = await this.profileRepository.getProfileByIdSummary(id)
+        return (profile)
+    }
+
     updatePhone = async (id: string, phone: string) => {
         const profile: profile = await this.profileRepository.updatePhone(id, phone)
         return (profile)
