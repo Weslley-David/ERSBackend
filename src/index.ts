@@ -4,6 +4,7 @@ import cors from 'cors'
 import routes from './routes'
 import { AcessDeniedError, DatabaseError, DomainLogicError, InteralServerError, RequestError } from './errors'
 import { Prisma } from '@prisma/client'
+const path = require('path')
 
 const app = express()
 const port = 3000
@@ -14,6 +15,9 @@ app.use(express.json())
 app.get('/', (req: Request, res: Response) => {
     res.json({ "working": "good" })
 })
+console.log(__dirname)
+
+app.use('/static', express.static(path.join(__dirname, '/../public')))
 
 app.use(routes)
 
