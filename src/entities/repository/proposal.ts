@@ -1,5 +1,5 @@
 
-import { proposal } from "@prisma/client"
+import { proposal, profile } from "@prisma/client"
 import { prisma } from "../database/index"
 import { DatabaseError } from "../../errors";
 
@@ -8,6 +8,16 @@ export class ProposalRepository {
         const proposal = await prisma.proposal.findMany({
             skip: skip,
             take: take,
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            }
         })
 
         if (!proposal) {
@@ -22,6 +32,16 @@ export class ProposalRepository {
             where: {
                 anounce_fk: id,
             },
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            }
         });
 
         if (!proposal) {
@@ -37,6 +57,16 @@ export class ProposalRepository {
             where: {
                 proposer_fk: id
             },
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            }
         });
 
         if (!proposal) {
@@ -49,17 +79,40 @@ export class ProposalRepository {
     listProposalsByAnouncerId = async (id: string): Promise<proposal[]> => {
         const proposal = await prisma.proposal.findMany({
             where: {
-              anounce: {
-                anouncer_fk: id,
-              },
+                anounce: {
+                    anouncer_fk: id,
+                },
             },
-          });
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            }
+        });
 
         return proposal;
     }
 
     getProposalById = async (id: string): Promise<proposal> => {
-        const proposal = await prisma.proposal.findUnique({ where: { id: id } })
+        const proposal = await prisma.proposal.findUnique({
+            where: { id: id },
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            }
+        })
+
         if (!proposal) {
             throw new DatabaseError("Coud'not recover data of user");
         }

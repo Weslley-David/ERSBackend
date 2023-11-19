@@ -9,6 +9,16 @@ export class AnounceRepository {
         const anounce = await prisma.anounce.findMany({
             skip: skip,
             take: take,
+            include: {
+                profile: {
+                    select: {
+                        username: true,
+                        image_url: true
+
+                    }
+
+                }
+            }
         },
         )
 
@@ -22,8 +32,18 @@ export class AnounceRepository {
         const anounce = await prisma.anounce.findMany({
             skip: skip,
             take: take,
-            where:{
-                residue:{
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            },
+            where: {
+                residue: {
                     name: name
                 }
             }
@@ -40,6 +60,16 @@ export class AnounceRepository {
         const anounces = await prisma.anounce.findMany({
             skip: skip,
             take: take,
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            },
             where: {
                 anouncer_fk: id,
             },
@@ -49,7 +79,18 @@ export class AnounceRepository {
     }
 
     getAnounceById = async (id: string): Promise<anounce> => {
-        const anounce = await prisma.anounce.findUnique({ where: { id: id } })
+        const anounce = await prisma.anounce.findUnique({ where: { id: id },
+            include: {
+                profile: {
+                    select:{
+                        username:true,
+                        image_url: true
+
+                    }
+
+                }
+            }
+        })
         if (!anounce) {
             throw new DatabaseError("Coud'not recover data of anounce");
         }
