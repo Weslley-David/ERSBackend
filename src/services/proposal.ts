@@ -44,11 +44,10 @@ export class ProposalService {
         if (anounce.anouncer_fk != creator) {
             throw new DomainLogicError("you cant accept something that is not yours");
         }
-        if (anounce.quantity > proposal.quantity) {
+        if (Number(anounce.quantity) < Number(proposal.quantity)) {
             console.log(anounce.quantity, '----', proposal.quantity)
             throw new DomainLogicError("quantity doesnt matches");
         }
-
         if (acepted == true) {
             const updatedProposal = await this.proposalRepository.updateProposalAcepted(id, acepted)
             //por incrível que pareça, funciona
