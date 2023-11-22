@@ -40,10 +40,12 @@ export class ProposalService {
         const proposal: proposal = await this.proposalRepository.getProposalById(id)
         const anounce: anounce = await this.anounceRepository.getAnounceById(proposal.anounce_fk)
 
+        console.log(anounce.quantity < proposal.quantity)
         if (anounce.anouncer_fk != creator) {
             throw new DomainLogicError("you cant accept something that is not yours");
         }
-        if (anounce.quantity < proposal.quantity) {
+        if (anounce.quantity > proposal.quantity) {
+            console.log(anounce.quantity, '----', proposal.quantity)
             throw new DomainLogicError("quantity doesnt matches");
         }
 
